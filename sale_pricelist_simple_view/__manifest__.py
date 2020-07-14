@@ -21,6 +21,5 @@
     'data': [
         'views/sale_pricelist_simple_pricelist_view.xml',
         'views/sale_pricelist_simple_product_view.xml',
-        'security/security.xml',
     ]
 }

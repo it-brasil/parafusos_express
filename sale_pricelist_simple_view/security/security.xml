@@ -1,5 +1,0 @@
-<odoo>
-    <record id="model_project_scrum_manager" model="res.groups">
-        <field name="name">model_project_scrum_sprint_project_scrum_sprint</field>
-    </record>
-</odoo>
