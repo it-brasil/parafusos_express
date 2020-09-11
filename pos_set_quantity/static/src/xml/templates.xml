@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="SetQtyPopupWidget">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-set-qty">
+                <header class="title">Adicionar Produto</header>
+                <main class="body" style="padding-top: 30px;">
+                    <span t-esc="widget.options.product ? widget.options.product.display_name : ''"
+                        style="display: block; margin-bottom: 30px;" />
+                    <div style="display: flex; align-items: center;">
+                        <span style="margin-right: 10px;">Quantidade: </span><input class="input-set-qty" type="number" />
+                    </div>
+                </main>
+                <footer class="footer">
+                    <div class="button confirm">
+                        Confirmar
+                    </div>
+                    <div class="button cancel">
+                        Cancelar
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>
