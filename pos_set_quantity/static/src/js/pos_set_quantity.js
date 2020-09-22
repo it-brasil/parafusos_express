@@ -26,7 +26,7 @@ odoo.define('pos_set_quantity.screens', function (require) {
             this._super(options);
 
             this.$(".confirm").click(function(ev) {
-                var quantity = parseInt(self.$(".input-set-qty").val());
+                var quantity = parseFloat(self.$(".input-set-qty").val().replace(",", "."));
                 if(quantity > 0){
                     self.pos.get_order().add_product(self.options.product, { quantity: quantity });
                 } else {
