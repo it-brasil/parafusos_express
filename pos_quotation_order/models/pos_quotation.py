@@ -283,3 +283,4 @@ class PosConfig(models.Model):
     _inherit = "pos.config"
 
     enable_quotation = fields.Boolean("Enable Quotation")
+    enable_payment = fields.Boolean('Permitir Pagamento')
