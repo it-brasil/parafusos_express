@@ -301,5 +301,40 @@ screens.define_action_button({
     }
 });
 
+ActionpadWidget.include({
+    renderElement: function() {
+        var self = this;
+        this._super();
+        this.$('.pay').off('click');
+        this.$('.pay').click(function(){
+            if(self.pos.config.enable_quotation && !self.pos.config.enable_payment){
+                self.pos.gui.show_popup("error", {
+                    'title': 'Pagamento não permitido.',
+                    'body':  `O pagamento não está habilitado para esta sessão! 
+                            Para habilitar o pagamento acesse as configurações da sessão do
+                            Ponto de Venda e selecione a opção 'Permitir Pagamento'.`,
+                });
+            } else {
+                var order = self.pos.get_order();
+                var has_valid_product_lot = _.every(order.orderlines.models, function(line){
+                    return line.has_valid_product_lot();
+                });
+                if(!has_valid_product_lot){
+                    self.gui.show_popup('confirm',{
+                        'title': _t('Empty Serial/Lot Number'),
+                        'body':  _t('One or more product(s) required serial/lot number.'),
+                        confirm: function(){
+                            self.gui.show_screen('payment');
+                        },
+                    });
+                }else{
+                    self.gui.show_screen('payment');
+                }
+            }
+        });
+    }
+})
+
+
 });
 
