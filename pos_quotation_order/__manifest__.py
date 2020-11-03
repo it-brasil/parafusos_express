@@ -9,6 +9,7 @@
         'security/ir.model.access.csv',
         'views/quotation_templates.xml',
         'views/pos_quotation.xml',
+        'report/pos_quotation.xml',
     ],
     'qweb': ['static/src/xml/pos_quotation.xml'],
 }

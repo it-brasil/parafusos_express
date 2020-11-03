@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+
+    <t t-extend="Product">
+        <t t-jquery='.product-name' t-operation='replace'>
+            <div class="product-name" t-attf-id="article_product_#{product.id}">
+                <t t-esc="product.display_name"/>
+                <br />
+                <span>
+                    <t t-esc="product.uom_id[1]"/>
+                </span>
+            </div>
+        </t>
+    </t>
+
+</template>

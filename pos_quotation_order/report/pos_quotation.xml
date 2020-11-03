@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report 
+        id="action_report_pos_quotation"
+        string="Orçamento POS"
+        model="pos.quotation" 
+        report_type="qweb-pdf"
+        file="pos_quotation_order.report_pos_quotation" 
+        name="pos_quotation_order.report_pos_quotation"
+        print_report_name="'Orçamento - %s' % (object.name)"
+    />
+
+
+<template id="report_pos_quotation_document">
+    <t t-call="web.external_layout">
+        <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+        <t t-set="address">
+            <div t-field="doc.partner_id"
+                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+            <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="doc.partner_id.vat"/></p>
+        </t>
+        <div class="page">
+            <div class="oe_structure"/>
+
+            <h2>
+                <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+                    <span t-if="doc.state not in ['draft']">Pedido # </span>
+                    <span t-if="doc.state in ['draft']">Orçamento # </span>
+                </t>
+                <span t-field="doc.name"/>
+            </h2>
+
+            <div class="row mt32 mb32" id="informations">
+                <div t-if="doc.date_order and doc.state not in ['draft','sent']" class="col-auto mw-100 mb-2">
+                    <strong>Data Orçamento:</strong>
+                    <p class="m-0" t-field="doc.date_order"/>
+                </div>
+                <div t-if="doc.date_quotation and doc.state in ['draft','sent']" class="col-auto mw-100 mb-2">
+                    <strong>Data da Cotação:</strong>
+                    <p class="m-0" t-field="doc.date_quotation"/>
+                </div>
+            </div>
+
+            <!-- Is there a discount on at least one line? -->
+            <t t-set="display_discount" t-value="any([l.discount for l in doc.lines])"/>
+
+            <table class="table table-sm o_main_table">
+                <thead>
+                    <tr>
+                        <!-- TODO: remove in master -->
+                        <t t-set="colspan" t-value="5"/>
+                        <th class="text-left">Descrição</th>
+                        <th class="text-right">Quantidade</th>
+                        <th class="text-right">Preço Unitário</th>
+                        <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                            <span>Desc.(%)</span>
+                            <!-- TODO: remove in master -->
+                            <t t-set="colspan" t-value="colspan+1"/>
+                        </th>
+                        <th class="text-right">
+                            <t>Preço Total</t>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="sale_tbody">
+
+                    <t t-set="current_subtotal" t-value="0"/>
+
+                    <t t-foreach="doc.lines" t-as="line">
+
+                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+
+                        <tr> 
+                            <td><span t-field="line.name"/></td>
+                            <td class="text-right">
+                                <span t-field="line.qty"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="line.price_unit"/>
+                            </td>
+                            <td t-if="display_discount" class="text-right">
+                                <span t-field="line.discount"/>
+                            </td>
+                            <td class="text-right o_price_total">
+                                <span t-field="line.price_subtotal_incl"/>
+                            </td>
+                        </tr>
+
+                    </t>
+                </tbody>
+            </table>
+
+            <div class="clearfix">
+                <div id="total" class="row" name="total">
+                    <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                        <table class="table table-sm">
+                            <tr class="border-black o_subtotal" style="">
+                                <td><strong>Impostos</strong></td>
+                                <td class="text-right">
+                                    <span t-field="doc.amount_tax"/>
+                                </td>
+                            </tr>
+                            <tr class="border-black o_total">
+                                <td><strong>Total</strong></td>
+                                <td class="text-right">
+                                    <span t-field="doc.amount_total"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <p t-field="doc.note" />
+
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+
+<template id="report_pos_quotation">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="pos_quotation_order.report_pos_quotation_document" t-lang="doc.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+
+
+</odoo>

@@ -6,7 +6,7 @@ var gui = require('point_of_sale.gui');
 var core = require('web.core');
 var rpc = require('web.rpc');
 var PopupWidget = require('point_of_sale.popups');
-var ProductListWidget = screens.ProductListWidget;
+var ActionpadWidget = screens.ActionpadWidget;
 var ScreenWidget = screens.ScreenWidget;
 var QWeb = core.qweb;
 var _t = core._t;
@@ -21,6 +21,9 @@ var QuotationPopupWidget = PopupWidget.extend({
         var self = this;
         this._super(options);
         this.renderElement();
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        this.$('.order_date').val(tomorrow.toLocaleDateString());
     },
     date_validate: function(){
         var v = $(".order_date").val();
@@ -43,16 +46,16 @@ var QuotationPopupWidget = PopupWidget.extend({
         var order_date = this.$('.order_date').val();
         var order_note = this.$('.order_note').val();
         var valid_date = true;
-        var validatePattern = /^(\d{4})([/|-])(\d{1,2})([/|-])(\d{1,2})$/;
+        var validatePattern = /^(\d{1,2})([/|-])(\d{1,2})([/|-])(\d{4})$/;
         if (order_date){
             var dateValues = order_date.match(validatePattern);
             if (dateValues == null){
                 valid_date = false;
             }
             else{
-                var orderYear = dateValues[1];
+                var orderYear = dateValues[5];
                 var orderMonth = dateValues[3];
-                var orderDate =  dateValues[5];
+                var orderDate =  dateValues[1];
                 if ((orderMonth < 1) || (orderMonth > 12)) {
                     valid_date = false;
                 }
@@ -73,7 +76,7 @@ var QuotationPopupWidget = PopupWidget.extend({
             }
         }
         $('.alert_msg').text("");
-        if (order_date && order_date < today || valid_date==false || !order_date){
+        if (order_date && valid_date==false || !order_date){
             $('.alert_msg').text("Please Select Valid Order Date!");
         }
         else{
@@ -306,8 +309,13 @@ ActionpadWidget.include({
         var self = this;
         this._super();
         this.$('.pay').off('click');
+        if (!self.pos.config.enable_payment)
+        {
+            this.$('.pay').prop('disabled', true);
+            this.$('.pay').css('background-color', '#b1b1b1');
+        }
         this.$('.pay').click(function(){
-            if(self.pos.config.enable_quotation && !self.pos.config.enable_payment){
+            if(!self.pos.config.enable_payment){
                 self.pos.gui.show_popup("error", {
                     'title': 'Pagamento não permitido.',
                     'body':  `O pagamento não está habilitado para esta sessão! 
