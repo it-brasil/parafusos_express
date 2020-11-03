@@ -20,7 +20,7 @@
                 <p class="body">
                     <br/>
                     <br/>
-                    <input type="date" name="order_date" class="order_date" placeholder="Delivery Date(yyyy/mm/dd)" maxlength="10"/>
+                    <input type="input" name="order_date" class="order_date" placeholder="Delivery Date(yyyy/mm/dd)" maxlength="10"/>
                     <br/>
                     <br/>
                     <span class="alert_msg"/>
