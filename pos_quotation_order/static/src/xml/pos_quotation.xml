@@ -80,6 +80,7 @@
                                                 <th>Date</th>
                                                 <th>Total Amount</th>
                                                 <th></th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody class='quotation-list-contents'>
@@ -100,9 +101,17 @@
             <td><t t-esc='quotation.partner_id[1]'/></td>
             <td><t t-esc='quotation.date_order' /></td>
             <td><t t-esc='quotation.amount_total' /></td>
-            <td><button class="confirm_quotation"><i class='fa fa-angle-double-right'></i>
+            <td>
+                <button class="confirm_quotation"><i class='fa fa-angle-double-right'></i>
                 Confirm
-            </button></td>
+                </button>
+            </td>
+            <td>
+                <a target="_blank" t-att-href='"/report/pdf/pos_quotation_order.report_pos_quotation/" + quotation.id'>
+                Imprimir
+                <i class='fa fa-print'></i>
+                </a>
+            </td>
         </tr>
     </t>
 
