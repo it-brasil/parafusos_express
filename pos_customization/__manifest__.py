@@ -14,4 +14,7 @@
     "data": [
         "views/res_partner.xml"
     ],
+    'qweb': [
+        "static/src/xml/pos_item.xml"
+    ],
 }
