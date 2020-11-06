@@ -66,6 +66,10 @@
                         <span class='search-clear'></span>
                     </span>
                     <span class='searchbox'></span>
+                    <span class='button update'>
+                        Atualizar
+                        <i class='fa fa-refresh'></i>
+                    </span>
                 </section>
                 <section class="full-content">
                     <div class='window'>
@@ -79,6 +83,7 @@
                                                 <th>Partner Name</th>
                                                 <th>Date</th>
                                                 <th>Total Amount</th>
+                                                <th>Obs.</th>
                                                 <th></th>
                                                 <th></th>
                                             </tr>
@@ -101,6 +106,7 @@
             <td><t t-esc='quotation.partner_id[1]'/></td>
             <td><t t-esc='quotation.date_order' /></td>
             <td><t t-esc='quotation.amount_total' /></td>
+            <td><t t-esc='quotation.note' /></td>
             <td>
                 <button class="confirm_quotation"><i class='fa fa-angle-double-right'></i>
                 Confirm
@@ -108,8 +114,7 @@
             </td>
             <td>
                 <a target="_blank" t-att-href='"/report/pdf/pos_quotation_order.report_pos_quotation/" + quotation.id'>
-                Imprimir
-                <i class='fa fa-print'></i>
+                    <i class='fa fa-print'></i>
                 </a>
             </td>
         </tr>

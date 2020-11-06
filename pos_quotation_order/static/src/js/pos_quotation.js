@@ -145,6 +145,9 @@ var QuotationListScreenWidget = ScreenWidget.extend({
         this.$('.back').click(function(){
             self.gui.back();
         });
+        this.$('.button.update').click(function () {
+            self.update_quotations_list();
+        });
 
         var quotations = this.pos.quotations;
         this.render_list(quotations);
@@ -170,6 +173,29 @@ var QuotationListScreenWidget = ScreenWidget.extend({
         this.$('.searchbox .search-clear').click(function(){
             self.clear_search();
         });
+    },
+
+    update_quotations_list: function () {
+        var self = this;
+
+        var fields = _.find(this.pos.models, function (model) {
+            return model.model === 'pos.quotation';
+        }).fields;
+        var line_fields = _.find(this.pos.models, function (model) {
+            return model.model === 'pos.quotation.line';
+        }).fields;
+
+        rpc.query({model: 'pos.quotation', method: 'search_read', args: [[['state', '=', 'draft']], fields]}).then(
+            function(quotations){
+                self.pos.quotations = quotations;
+                rpc.query({model: 'pos.quotation.line', method: 'search_read', args: [[['order_id.state', '=', 'draft']], line_fields]}).then(
+                    function(quotation_line){
+                        self.pos.quotation_lines = quotation_line;
+                        self.render_list(self.pos.quotations);
+                    }
+                );
+            }
+        );
     },
 
     render_list: function(quotations){
