@@ -12,7 +12,7 @@ var _t = core._t;
 
 models.load_models({
     model:  'pos.quotation',
-    fields: ['name', 'partner_id','date_order','amount_total','lines','state'],
+    fields: ['name', 'partner_id','date_order','amount_total','lines','state', 'note'],
     domain: [['state','=','draft']],
     loaded: function(self, quotations){
         self.quotations = quotations;

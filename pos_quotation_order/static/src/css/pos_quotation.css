@@ -49,3 +49,7 @@
 .quotation_list-screen .searchbox input{
     width: 120px;
 }
+.quotation_list-screen .button.update {
+    float: right;
+    position: initial;
+}
